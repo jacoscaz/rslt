@@ -1,0 +1,21 @@
+{
+  "name": "rslt",
+  "version": "0.0.1",
+  "description": "Experimental implementation of a monadic Result type",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./dist && tsc",
+    "watch": "rm -rf ./dist && tsc --watch"
+  },
+  "author": "Jacopo Scazzosi <jacopo@scazzosi.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.15.12",
+    "typescript": "^5.0.4"
+  },
+  "files": [
+    "./dist/**/*.js",
+    "./dist/**/*.d.ts"
+  ]
+}
