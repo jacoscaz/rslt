@@ -1,7 +1,7 @@
 {
   "name": "rslt",
-  "version": "0.0.1",
-  "description": "Experimental implementation of a monadic Result type",
+  "version": "0.0.2",
+  "description": "monadic Result type in TypeScript with enforced error handling",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,5 +17,15 @@
   "files": [
     "./dist/**/*.js",
     "./dist/**/*.d.ts"
-  ]
+  ],
+  "homepage": "https://github.com/jacoscaz/rslt",
+  "bugs": "https://github.com/jacoscaz/rslt/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jacoscaz/rslt.git"
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": ">= 18.0.0"
+  }
 }
