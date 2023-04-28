@@ -2,22 +2,21 @@
   "name": "rslt",
   "version": "0.0.3",
   "description": "monadic Result type in TypeScript with enforced error handling",
-  "main": "dist/index.js",
+  "main": "dist/rslt.js",
+  "types": "dist/rslt.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && mocha dist/**/*.test.js",
     "build": "rm -rf ./dist && tsc",
     "watch": "rm -rf ./dist && tsc --watch"
   },
   "author": "Jacopo Scazzosi <jacopo@scazzosi.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.12",
+    "mocha": "^10.2.0",
     "typescript": "^5.0.4"
   },
-  "files": [
-    "./dist/**/*.js",
-    "./dist/**/*.d.ts"
-  ],
   "homepage": "https://github.com/jacoscaz/rslt",
   "bugs": "https://github.com/jacoscaz/rslt/issues",
   "repository": {
