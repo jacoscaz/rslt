@@ -63,20 +63,11 @@ class Err<E> implements SyncResult<never, E> {
   }
 }
 
-class Empty extends Ok<void> {
-  unwrap(): never {
-    throw new Error('Cannot use unwrap() on empty result');
-  }
-  unwrapAsync(): never {
-    throw new Error('Cannot use unwrapAsync() on empty result');
-  }
-}
-
 export const ok = <V>(val: V): SyncResult<V, never> => new Ok<V>(val);
 
 export const err = <E>(err: E): SyncResult<never, E> => new Err<E>(err);
 
-export const empty = new Empty();
+export const empty = new Ok<void>(undefined);
 
 class AsyncResult<V, E> implements Result<V, E> {
 
