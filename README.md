@@ -28,7 +28,7 @@ lack of testing.
 ```TypeScript
 import { ok, err, empty, Result } from 'rslt';
 
-const result = empty()
+const result = empty
   .ifOk(() => ok<'hello'>('hello'))
   .ifErr(() => ok<'salut'>('salut'))
   .ifErrAsync(async () => err<'ciao'>('ciao'));
