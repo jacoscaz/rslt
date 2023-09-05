@@ -100,7 +100,7 @@ class AsyncResult<V, E> implements Result<V, E> {
 
   unwrapAsync(): Promise<V> {
     if (this._result) {
-      return this._result!.unwrapAsync();
+      return this._result.unwrapAsync();
     }
     return this._promise.then(result => {
       this._result = result;
