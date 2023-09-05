@@ -1,12 +1,16 @@
 {
   "name": "rslt",
-  "version": "0.0.3",
-  "description": "monadic Result type in TypeScript with enforced error handling",
-  "main": "dist/index.js",
+  "version": "0.0.4",
+  "description": "Monadic Result type in TypeScript with enforced error handling",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf ./dist && tsc",
-    "watch": "rm -rf ./dist && tsc --watch"
+    "clean": "rm -rf dist/",
+    "build:es": "tsc -p tsconfig.esm.json && echo '{\"type\": \"module\"}' > dist/esm/package.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json && echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json",
+    "build": "npm run clean && npm run build:es && npm run build:cjs"
   },
   "author": "Jacopo Scazzosi <jacopo@scazzosi.com>",
   "license": "MIT",
@@ -23,9 +27,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/jacoscaz/rslt.git"
-  },
-  "engineStrict": true,
-  "engines": {
-    "node": ">= 18.0.0"
   }
 }

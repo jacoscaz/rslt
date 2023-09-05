@@ -1,5 +1,5 @@
 
-const _toString = (item: any) => {
+const toString = (item: any) => {
   return item instanceof Error 
    ? item.stack
    : Object.prototype.toString.call(item);
@@ -10,26 +10,28 @@ const isNode = typeof process !== 'undefined'
 
 const isBrowser = new Function('try { return this === window; } catch (e) { return false; }')();
 
+type UncaughtHandler = (err: any) => void;
+
+export let uncaught: UncaughtHandler = (err: any) => {
+  console.error('[RSLT] - [https://npm.im/rslt] - Unhandled error:', err);
+};
+
 if (isNode) {
-
-  process.on('uncaughtException', (err) => {
-    console.error('[RSLT] - [https://npm.im/rslt] - Unhandled exception:', err);
+  uncaught = (err) => {
+    console.error('[RSLT] - [https://npm.im/rslt] - Unhandled error:', err);
     process.exit(1);
-  });
+  };
+  process.on('uncaughtException', uncaught);
+  process.on('unhandledRejection', uncaught);
+} 
 
-  process.on('unhandledRejection', (err) => {
-    console.error('[RSLT] - [https://npm.im/rslt] - Unhandled rejection:', err);
-    process.exit(1);
-  });
-
-} else if (isBrowser) {
-
-  window.addEventListener('error', (err) => {
-    alert('[RSLT] - [https://npm.im/rslt] - Unhandled exception:\n' + _toString(err));      
-  });
-
-  window.addEventListener('unhandledrejection', (err) => {
-    alert('[RSLT] - [https://npm.im/rslt] - Unhandled rejection:\n' + _toString(err));      
-  });
-
+else if (isBrowser) {
+  uncaught = (err) => {
+    document.body.innerHTML = `
+      <h1>[RSLT] - [https://npm.im/rslt] - Unhandled error</h1>
+      <pre>${toString(err)}</pre>
+    `;
+  };
+  window.addEventListener('error', uncaught);
+  window.addEventListener('unhandledrejection', uncaught);
 }

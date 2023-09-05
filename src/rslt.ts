@@ -1,5 +1,5 @@
 
-import './uncaught';
+import './uncaught.js';
 
 export interface Result<V, E> {
   ifOkAsync<VO, EO>(fn: (val: V) => Promise<SyncResult<VO, EO>>): Result<VO, E | EO>;
@@ -24,10 +24,10 @@ class Ok<V> implements SyncResult<V, never> {
   ifOkAsync<VO, EO>(fn: (val: V) => Promise<SyncResult<VO, EO>>): Result<VO, EO> {
     return new AsyncResult<VO, EO>(fn(this.val));
   }
-  ifErr<VO, EO>(fn: (err: never) => SyncResult<VO, EO>): SyncResult<V, never> {
+  ifErr(): SyncResult<V, never> {
     return this;
   }
-  ifErrAsync<VO, EO>(fn: (err: never) => Promise<SyncResult<VO, EO>>): Result<V, never> {
+  ifErrAsync(): Result<V, never> {
     return this;
   }
   unwrap(): V {
@@ -43,10 +43,10 @@ class Err<E> implements SyncResult<never, E> {
   constructor(err: E) {
     this.err = err;
   }
-  ifOk<VO, EO>(fn: (val: never) => SyncResult<VO, EO>): SyncResult<never, E> {
+  ifOk(): SyncResult<never, E> {
     return this;
   }
-  ifOkAsync<VO, EO>(fn: (val: never) => Promise<SyncResult<VO, EO>>): Result<never, E> {
+  ifOkAsync(): Result<never, E> {
     return this;
   }
   ifErr<VO, EO>(fn: (err: E) => SyncResult<VO, EO>): SyncResult<VO, EO> {
@@ -71,31 +71,41 @@ export const empty = new Ok<void>(undefined);
 
 class AsyncResult<V, E> implements Result<V, E> {
 
-  private promise: Promise<SyncResult<V, E>>;
+  private _result?: SyncResult<V, E>;
+  private _promise: Promise<SyncResult<V, E>>;
 
   constructor(p: Promise<SyncResult<V, E>>) {
-    this.promise = p;
+    this._promise = p;
   }
 
   ifOkAsync<VO, EO>(fn: (val: V) => Promise<SyncResult<VO, EO>>): Result<VO, E | EO> {
-    return new AsyncResult<VO, E | EO>(this.promise.then((result) => {
+    if (this._result) {
+      return this._result.ifOk(fn as unknown as (val: V) => SyncResult<VO, EO>);
+    }
+    return new AsyncResult<VO, E | EO>(this._promise.then((result) => {
+      this._result = result;
       return result.ifOk(fn as unknown as (val: V) => SyncResult<VO, EO>);
     }));
   }
 
   ifErrAsync<VO, EO>(fn: (err: E) => Promise<SyncResult<VO, EO>>): Result<V | VO, EO> {
-    return new AsyncResult<V | VO, EO>(this.promise.then((result) => {
+    if (this._result) {
+      return this._result.ifErr(fn as unknown as (err: E) => SyncResult<VO, EO>);
+    }
+    return new AsyncResult<V | VO, EO>(this._promise.then((result) => {
+      this._result = result;
       return result.ifErr(fn as unknown as (err: E) => SyncResult<VO, EO>);
     }));
   }
 
   unwrapAsync(): Promise<V> {
-    return this.promise.then(result => result.unwrap());
+    if (this._result) {
+      return this._result!.unwrapAsync();
+    }
+    return this._promise.then(result => {
+      this._result = result;
+      return result.unwrap();
+    });
   }
 
 }
-
-
-
-
-

@@ -1,12 +1,12 @@
 
-import { empty, ok, err, Result } from './index';
+import { empty, ok, err, Result } from './rslt.js';
 
 (async () => {
 
   const result = empty
     .ifOk(() => Math.random() > 0.5 ? ok<'hello'>('hello') : err<'naw1'>('naw1'))
     .ifOk(() => Math.random() > 0.5 ? ok<'salut'>('salut') : err<'naw2'>('naw2'))
-    .ifErr(() => ok('hi'))
+    // .ifErr(() => ok('hi'))
     .ifErrAsync(async () => err<'ciao'>('ciao'))
     
   
